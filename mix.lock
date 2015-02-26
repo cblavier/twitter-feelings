@@ -1,0 +1,7 @@
+%{"exjsx": {:hex, :exjsx, "3.1.0"},
+  "extwitter": {:hex, :extwitter, "0.3.0"},
+  "jsx": {:hex, :jsx, "2.4.0"},
+  "meck": {:hex, :meck, "0.8.2"},
+  "mock": {:hex, :mock, "0.1.0"},
+  "oauth": {:git, "git://github.com/tim/erlang-oauth.git", "2ee206ea921722893200a0ad534c6b6130233325", []},
+  "timex": {:hex, :timex, "0.13.3"}}
