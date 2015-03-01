@@ -30,7 +30,7 @@ defmodule TwitterFeelings do
     lang_atom = String.to_atom(lang)
     CorpusBuilder.TweetStore.set_lang(lang)
     CorpusBuilder.TweetStore.set_mood(mood)
-    CorpusBuilder.TwitterSearch.search(lang_atom, mood, query_count)
+    CorpusBuilder.TwitterSearch.search_and_store(lang_atom, mood, query_count)
   end
 
   defp process(:help) do

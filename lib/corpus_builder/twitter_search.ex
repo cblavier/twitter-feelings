@@ -14,13 +14,15 @@ defmodule CorpusBuilder.TwitterSearch do
 
   def search_and_store(lang, mood, query_count) do
     GenServer.cast(__MODULE__, {:set_query_count, query_count})
-    call_search_and_store(lang, mood)
+    search_and_store_loop(lang, mood)
   end
 
   # server implementation
 
-  # calls Twitter search api and process search output
-  # recursive call until query_count is decremented to 0
+  def handle_call({:search_and_store, _lang, _mood}, _from, {max_id, 0}) do
+    {:reply, :stop, {max_id, 0}}
+  end
+
   def handle_call({:search_and_store, lang, mood}, _from, {max_id, query_count}) do
     max_id = RateLimiter.handle_rate_limit(fn ->
       parsed_params = search_params(lang, mood, max_id) |> ExTwitter.Parser.parse_request_params
@@ -28,7 +30,6 @@ defmodule CorpusBuilder.TwitterSearch do
       Task.start_link(fn -> process_search_output(json) end)
       new_max_id(json)
     end)
-    if query_count > 1, do: call_search_and_store(lang, mood)
     {:reply, :ok, {max_id, query_count - 1}}
   end
 
@@ -38,8 +39,12 @@ defmodule CorpusBuilder.TwitterSearch do
 
   # private
 
-  defp call_search_and_store(lang, mood) do
-    GenServer.call(__MODULE__, {:search_and_store, lang, mood}, :infinity)
+  defp search_and_store_loop(lang, mood) do
+    result = GenServer.call(__MODULE__, {:search_and_store, lang, mood}, :infinity)
+    case result do
+    :ok -> search_and_store_loop(lang, mood)
+    :stop -> :ok
+    end
   end
 
   defp search_params(lang, mood, :no_max_id), do: [q: query(lang, mood), count: @page_size]
