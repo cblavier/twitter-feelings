@@ -6,12 +6,17 @@ defmodule CorpusBuilder.TwitterSearchTest do
   alias CorpusBuilder.TwitterSearch, as: TSearch
   alias CorpusBuilder.TweetStore,    as: TStore
 
+  setup do
+    TSearch.start_link
+    {:ok, []}
+  end
+
   test "processes and store tweets" do
     lang = :fr
     mood = :positive
     with_mock ExTwitter.API.Base, [request: fn(_,_,_) -> statuses_json end] do
       with_mock TStore, [store_tweet: fn(_) -> end] do
-        TSearch.search(lang, mood, 1)
+        TSearch.search_and_store(lang, mood, 1)
         :timer.sleep(10)
         assert called TStore.store_tweet("thee namaste nerdz #freebandnames")
         assert called TStore.store_tweet("mexican heaven the hell #freebandnames")

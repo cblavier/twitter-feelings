@@ -9,7 +9,7 @@ defmodule CorpusBuilder.TweetProcessor do
       |> Stream.map(fn(text)    -> Regex.replace(~r/[^a-z0-9'# ]/, text, " ") end)      # removes punctuation
       |> Stream.map(fn(text)    -> Regex.replace(~r/(.)\1{2,}/, text, "\\1\\1") end)    # replace repeated characters
       |> Stream.reject(fn(text) -> Regex.match?(~r/^\s*$/, text) end)                   # remove empty strings
-      |> Stream.map(fn(text) ->    Regex.replace(~r/^[\s]+|[\s]+$/, text, "") end)      # remove leading and trailing spaces
+      |> Stream.map(fn(text)    -> Regex.replace(~r/^[\s]+|[\s]+$/, text, "") end)      # remove leading and trailing spaces
       |> Stream.reject(fn(text) -> Regex.match?(~r/^[a-zA_Z]{1,2}$/,text) end)          # remove very short words
       |> Enum.join " "
   end

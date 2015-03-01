@@ -4,6 +4,8 @@ defmodule TwitterFeelings do
   @default_lang        :en
 
   def main(argv) do
+    CorpusBuilder.TwitterSearch.start_link
+    CorpusBuilder.TweetStore.start_link
     argv
       |> parse_args
       |> process
@@ -24,10 +26,11 @@ defmodule TwitterFeelings do
     end
   end
 
-  defp process({lang, mood, count}) do
+  defp process({lang, mood, query_count}) do
     lang_atom = String.to_atom(lang)
-    CorpusBuilder.TweetStore.start_link({lang_atom, mood})
-    CorpusBuilder.TwitterSearch.search(lang_atom, mood, count)
+    CorpusBuilder.TweetStore.set_lang(lang)
+    CorpusBuilder.TweetStore.set_mood(mood)
+    CorpusBuilder.TwitterSearch.search(lang_atom, mood, query_count)
   end
 
   defp process(:help) do

@@ -1,33 +1,49 @@
 defmodule CorpusBuilder.TwitterSearch do
 
+  use GenServer
+
   alias CorpusBuilder.TweetProcessor,     as: Processor
   alias CorpusBuilder.TwitterRateLimiter, as: RateLimiter
   alias CorpusBuilder.TweetStore,         as: TweetStore
 
   @page_size 100
 
-  def search(lang, mood, query_count) do
-    max_id = inner_search([q: query(lang, mood), count: @page_size])
-    if query_count > 1, do: search(lang, mood, max_id, query_count - 1)
-    :ok
+  def start_link do
+    GenServer.start_link(__MODULE__, {:no_max_id, 0}, name: __MODULE__)
   end
 
-  def search(lang, mood, max_id, query_count) do
-    max_id = inner_search([q: query(lang, mood), count: @page_size, max_id: max_id])
-    if query_count > 1, do: search(lang, mood, max_id, query_count - 1)
-    :ok
+  def search_and_store(lang, mood, query_count) do
+    GenServer.cast(__MODULE__, {:set_query_count, query_count})
+    call_search_and_store(lang, mood)
   end
 
-  # private
+  # server implementation
 
-  defp inner_search(params) do
-    RateLimiter.handle_rate_limit(fn ->
-      parsed_params = ExTwitter.Parser.parse_request_params(params)
+  # calls Twitter search api and process search output
+  # recursive call until query_count is decremented to 0
+  def handle_call({:search_and_store, lang, mood}, _from, {max_id, query_count}) do
+    max_id = RateLimiter.handle_rate_limit(fn ->
+      parsed_params = search_params(lang, mood, max_id) |> ExTwitter.Parser.parse_request_params
       json = ExTwitter.API.Base.request(:get, "1.1/search/tweets.json", parsed_params)
       Task.start_link(fn -> process_search_output(json) end)
       new_max_id(json)
     end)
+    if query_count > 1, do: call_search_and_store(lang, mood)
+    {:reply, :ok, {max_id, query_count - 1}}
   end
+
+  def handle_cast({:set_query_count, query_count}, {max_id, _}) do
+    {:noreply, {max_id, query_count}}
+  end
+
+  # private
+
+  defp call_search_and_store(lang, mood) do
+    GenServer.call(__MODULE__, {:search_and_store, lang, mood}, :infinity)
+  end
+
+  defp search_params(lang, mood, :no_max_id), do: [q: query(lang, mood), count: @page_size]
+  defp search_params(lang, mood, max_id),     do: [q: query(lang, mood), count: @page_size, max_id: max_id]
 
   defp query(lang, :positive), do: "lang:#{Atom.to_string(lang)} :)"
   defp query(lang, :negative), do: "lang:#{Atom.to_string(lang)} :("

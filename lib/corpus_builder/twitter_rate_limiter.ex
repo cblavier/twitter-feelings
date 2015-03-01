@@ -7,7 +7,7 @@ defmodule CorpusBuilder.TwitterRateLimiter do
     rescue
       error in ExTwitter.RateLimitExceededError ->
         time_to_sleep = max(0, error.reset_in)
-        IO.puts "sleeping #{time_to_sleep}s"
+        IO.puts "Rate limit reached, sleeping #{time_to_sleep}s"
         :timer.sleep(round(time_to_sleep * 1000))
         handle_rate_limit(fun)
     end
