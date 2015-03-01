@@ -10,12 +10,12 @@ defmodule CorpusBuilder.TwitterSearchTest do
     lang = :fr
     mood = :positive
     with_mock ExTwitter.API.Base, [request: fn(_,_,_) -> statuses_json end] do
-      with_mock TStore, [store: fn(_,_,_) -> end] do
+      with_mock TStore, [store_tweet: fn(_) -> end] do
         TSearch.search(lang, mood, 1)
         :timer.sleep(10)
-        assert called TStore.store("thee namaste nerdz #freebandnames", lang, mood)
-        assert called TStore.store("mexican heaven the hell #freebandnames", lang, mood)
-        assert called TStore.store("the foolish mortals #freebandnames", lang, mood)
+        assert called TStore.store_tweet("thee namaste nerdz #freebandnames")
+        assert called TStore.store_tweet("mexican heaven the hell #freebandnames")
+        assert called TStore.store_tweet("the foolish mortals #freebandnames")
       end
     end
   end

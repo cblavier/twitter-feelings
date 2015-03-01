@@ -4,7 +4,6 @@ defmodule TwitterFeelings do
   @default_lang        :en
 
   def main(argv) do
-    RedisPool.create_pool(:tf_pool, 30, 'localhost', 6379)
     argv
       |> parse_args
       |> process
@@ -27,6 +26,7 @@ defmodule TwitterFeelings do
 
   defp process({lang, mood, count}) do
     lang_atom = String.to_atom(lang)
+    CorpusBuilder.TweetStore.start_link({lang_atom, mood})
     CorpusBuilder.TwitterSearch.search(lang_atom, mood, count)
   end
 
