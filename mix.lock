@@ -1,7 +1,10 @@
-%{"exjsx": {:hex, :exjsx, "3.1.0"},
+%{"eredis": {:git, "git://github.com/wooga/eredis.git", "3c9dfc5cf4e2cd79276b138692d63d3b1d298a52", []},
+  "exjsx": {:hex, :exjsx, "3.1.0"},
   "extwitter": {:hex, :extwitter, "0.3.0"},
   "jsx": {:hex, :jsx, "2.4.0"},
   "meck": {:hex, :meck, "0.8.2"},
   "mock": {:hex, :mock, "0.1.0"},
   "oauth": {:git, "git://github.com/tim/erlang-oauth.git", "2ee206ea921722893200a0ad534c6b6130233325", []},
+  "poolboy": {:git, "git://github.com/devinus/poolboy.git", "96d20256e1eba3cc915fde2a3a9f2483bb08bd87", []},
+  "redis_pool": {:git, "https://github.com/le0pard/redis_pool", "fc97622788536a8aedfd55341413641de60fc960", []},
   "timex": {:hex, :timex, "0.13.3"}}

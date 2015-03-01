@@ -24,8 +24,8 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :ex_twitter, :oauth, [
-   consumer_key: "",
-   consumer_secret: "",
-   access_token: "",
-   access_token_secret: ""
+   consumer_key: "ypbgz6IUbRjtss4aG9LQtdPT5",
+   consumer_secret: "cCGuHTyXwtQ8hPKYwS5MBAMRjnpNKLAKY7Sy5IlGuEUMBuR8qy",
+   access_token: "27623826-ASx4Tx8FWOiaK2SwcBx1NOeysR3PhkthAqtLHlSKs",
+   access_token_secret: "ASBaFwCrd6Caac3lgpwXOaG4IuUYXYl5oh0xuxBjJYI7O"
 ]

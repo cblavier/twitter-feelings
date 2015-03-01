@@ -1,26 +1,27 @@
-defmodule TF.TwitterSearchTest do
+defmodule CorpusBuilder.TwitterSearchTest do
 
   use ExUnit.Case, async: false
   import Mock
 
-  alias TF.TwitterSearch, as: TS
+  alias CorpusBuilder.TwitterSearch, as: TSearch
+  alias CorpusBuilder.TweetStore,    as: TStore
 
   test "processes and store tweets" do
+    lang = :fr
+    mood = :positive
     with_mock ExTwitter.API.Base, [request: fn(_,_,_) -> statuses_json end] do
-      with_mock TF.TwitterRateLimiter, [rate_limit: fn(fun) -> fun.() end] do
-        with_mock TF.TweetStore, [store: fn(_) -> end] do
-          TS.search(":)", 1)
-          :timer.sleep(100)
-          assert called TF.TweetStore.store(":) thee namaste nerdz #freebandnames")
-          assert called TF.TweetStore.store("mexican heaven the hell #freebandnames :)")
-          assert called TF.TweetStore.store("the foolish mortals :D #freebandnames")
-        end
+      with_mock TStore, [store: fn(_,_,_) -> end] do
+        TSearch.search(lang, mood, 1)
+        :timer.sleep(10)
+        assert called TStore.store("thee namaste nerdz #freebandnames", lang, mood)
+        assert called TStore.store("mexican heaven the hell #freebandnames", lang, mood)
+        assert called TStore.store("the foolish mortals #freebandnames", lang, mood)
       end
     end
   end
 
   def statuses_json do
-    ExTwitter.JSON.decode("""
+    {:ok, json} = ExTwitter.JSON.decode("""
     {
       "statuses": [
         {
@@ -38,6 +39,7 @@ defmodule TF.TwitterSearchTest do
       }
     }
     """)
+    json
   end
 
 
