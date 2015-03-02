@@ -4,7 +4,6 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
   use TwitterFeelings.Common.Stashable, stash_name: :tweet_store_stash
 
   def start_link do
-    RedisPool.create_pool(:tf_pool, 30, 'localhost', 6379)
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 

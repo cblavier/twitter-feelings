@@ -8,13 +8,12 @@ defmodule TwitterFeelings.Common.Stashable do
       def stash_name, do: unquote(opts[:stash_name])
 
       def init(_args) do
-        IO.puts "in init"
         state = TwitterFeelings.Common.Stash.get_state(stash_name)
         { :ok, state }
       end
 
-      def terminate(_reason, state) do
-        IO.puts "in terminate"
+      def terminate(reason, state) do
+        IO.puts "#{stash_name} in terminate because of #{reason.inspect}"
         TwitterFeelings.Common.Stash.save_state(stash_name, state)
       end
 
