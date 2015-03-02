@@ -1,5 +1,5 @@
-# Mixin that will automatically init a GenServer with state store in a Stash
-# and save state in that Stash after a failure
+# Mixin that will automatically init a GenServer with state
+# stored in a stash, and save state in that stash after a failure
 defmodule TwitterFeelings.Common.Stashable do
 
   defmacro __using__(opts) do

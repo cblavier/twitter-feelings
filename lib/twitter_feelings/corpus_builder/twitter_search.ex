@@ -1,7 +1,9 @@
 defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
 
   use GenServer
-  use TwitterFeelings.Common.Stashable, [stash_name: :twitter_search_stash]
+  use TwitterFeelings.Common.Stashable, stash_name: :twitter_search_stash
+
+  require Logger
 
   alias TwitterFeelings.CorpusBuilder.TweetProcessor,     as: Processor
   alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
@@ -13,6 +15,8 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
+  # Runs query_count queries on TwitterSearch api, with given lang / mood.
+  # Tweets are filtered, normalized and then stored into a Redis set.
   def search_and_store(lang, mood, query_count) do
     GenServer.cast(__MODULE__, {:set_query_count, query_count})
     search_and_store_loop(lang, mood)
@@ -25,6 +29,7 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
   end
 
   def handle_call({:search_and_store, lang, mood}, _from, {max_id, query_count}) do
+    Logger.debug("searching tweets for lang:#{lang}, mood:#{mood}. Still #{query_count} queries to run.")
     max_id = RateLimiter.handle_rate_limit(fn ->
       parsed_params = search_params(lang, mood, max_id) |> ExTwitter.Parser.parse_request_params
       json = ExTwitter.API.Base.request(:get, "1.1/search/tweets.json", parsed_params)
@@ -48,11 +53,11 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
     end
   end
 
-  defp search_params(lang, mood, :no_max_id), do: [q: query(lang, mood), count: @page_size]
-  defp search_params(lang, mood, max_id),     do: [q: query(lang, mood), count: @page_size, max_id: max_id]
+  defp search_params(lang, mood, :no_max_id), do: [q: query(mood), lang: "#{lang}", include_entities: false, count: @page_size]
+  defp search_params(lang, mood, max_id),     do: [q: query(mood), lang: "#{lang}", include_entities: false, count: @page_size, max_id: max_id]
 
-  defp query(lang, :positive), do: "lang:#{Atom.to_string(lang)} :)"
-  defp query(lang, :negative), do: "lang:#{Atom.to_string(lang)} :("
+  defp query(:positive), do: ":)"
+  defp query(:negative), do: ":("
 
   defp process_search_output(json) do
     get_in(json, ["statuses"])

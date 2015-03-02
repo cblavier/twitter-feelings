@@ -24,12 +24,12 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 config :ex_twitter, :oauth, [
-   consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
-   consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
-   access_token: System.get_env("ACCESS_TOKEN"),
-   access_token_secret: System.get_env("ACCESS_TOKEN_SECRET")
+   consumer_key:        System.get_env("TWITTER_CONSUMER_KEY"),
+   consumer_secret:     System.get_env("TWITTER_CONSUMER_SECRET"),
+   access_token:        System.get_env("TWITTER_ACCESS_TOKEN"),
+   access_token_secret: System.get_env("TWITTER_ACCESS_TOKEN_SECRET")
 ]
 
 config :redis_pool, :pools, [
-  tf_pool: [size: 10]
+  tf_pool: [size: 10, hostname: "127.0.0.1", port: 6379]
 ]

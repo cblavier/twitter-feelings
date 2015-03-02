@@ -16,16 +16,22 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
 
   test "callback after small delay when rate limit is reset soon" do
     reset_time = x_seconds_from_now(1)
+    rate_limited_function = fn ->
+      raise_rate_limit_error_before(reset_time,fn ->
+        IO.puts("here")
+      end)
+    end
+
     with_mock IO, [puts: fn(_) -> end ] do
-      RL.handle_rate_limit(fn -> raise_rate_limit_error_before(reset_time) end)
+      RL.handle_rate_limit(rate_limited_function)
       :timer.sleep(10)
       assert called IO.puts("here")
     end
   end
 
-  def raise_rate_limit_error_before(reset_time) do
+  def raise_rate_limit_error_before(reset_time, fun) do
     if Time.now(:secs) > reset_time do
-      IO.puts("here")
+      fun.()
     else
       raise RateLimitError, reset_in: 0.1
     end
