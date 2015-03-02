@@ -1,11 +1,16 @@
 defmodule TwitterFeelings do
 
-  @default_query_count 450 # matches Twitter API rate limit for a 15mn window
+  alias TwitterFeelings.CorpusBuilder.TwitterSearch,  as: TwitterSearch
+  alias TwitterFeelings.CorpusBuilder.TweetStore,     as: TweetStore
+
+  @default_query_count 5000
   @default_lang        :en
 
+  def start(_type, _args) do
+    TwitterFeelings.CorpusBuilder.Supervisor.start_link
+  end
+
   def main(argv) do
-    CorpusBuilder.TwitterSearch.start_link
-    CorpusBuilder.TweetStore.start_link
     argv
       |> parse_args
       |> process
@@ -27,10 +32,9 @@ defmodule TwitterFeelings do
   end
 
   defp process({lang, mood, query_count}) do
-    lang_atom = String.to_atom(lang)
-    CorpusBuilder.TweetStore.set_lang(lang)
-    CorpusBuilder.TweetStore.set_mood(mood)
-    CorpusBuilder.TwitterSearch.search_and_store(lang_atom, mood, query_count)
+    TweetStore.set_lang(lang)
+    TweetStore.set_mood(mood)
+    TwitterSearch.search_and_store(String.to_atom(lang), mood, query_count)
   end
 
   defp process(:help) do

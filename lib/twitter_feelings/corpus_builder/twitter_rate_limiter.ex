@@ -1,4 +1,4 @@
-defmodule CorpusBuilder.TwitterRateLimiter do
+defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiter do
 
   # Handles Twitter API rate limit errors
   def handle_rate_limit(fun) do

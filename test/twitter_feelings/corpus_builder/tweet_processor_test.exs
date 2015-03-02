@@ -1,7 +1,7 @@
-defmodule CorpusBuilder.TweetnormalizeorTest do
+defmodule TwitterFeelings.CorpusBuilder.TweetnormalizeorTest do
   use ExUnit.Case, async: true
 
-  alias CorpusBuilder.TweetProcessor, as: TP
+  alias TwitterFeelings.CorpusBuilder.TweetProcessor, as: TP
 
   # normalize
 

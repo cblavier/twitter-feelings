@@ -1,10 +1,10 @@
-defmodule CorpusBuilder.TwitterRateLimiterTest do
+defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
 
   use ExUnit.Case, async: false
   use Timex
   import Mock
 
-  alias CorpusBuilder.TwitterRateLimiter, as: RL
+  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RL
   alias ExTwitter.RateLimitExceededError, as: RateLimitError
 
   test "callback immediately when rate limit is ok" do

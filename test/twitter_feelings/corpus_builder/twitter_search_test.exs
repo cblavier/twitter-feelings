@@ -1,10 +1,10 @@
-defmodule CorpusBuilder.TwitterSearchTest do
+defmodule TwitterFeelings.CorpusBuilder.TwitterSearchTest do
 
   use ExUnit.Case, async: false
   import Mock
 
-  alias CorpusBuilder.TwitterSearch, as: TSearch
-  alias CorpusBuilder.TweetStore,    as: TStore
+  alias TwitterFeelings.CorpusBuilder.TwitterSearch, as: TSearch
+  alias TwitterFeelings.CorpusBuilder.TweetStore,    as: TStore
 
   setup do
     TSearch.start_link

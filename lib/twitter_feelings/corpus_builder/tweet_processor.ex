@@ -1,4 +1,4 @@
-defmodule CorpusBuilder.TweetProcessor do
+defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
 
   def normalize(tweet_text) do
     String.downcase(tweet_text)

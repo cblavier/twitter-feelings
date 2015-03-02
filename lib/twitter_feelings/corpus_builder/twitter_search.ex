@@ -1,15 +1,16 @@
-defmodule CorpusBuilder.TwitterSearch do
+defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
 
   use GenServer
+  use TwitterFeelings.Common.Stashable, [stash_name: :twitter_search_stash]
 
-  alias CorpusBuilder.TweetProcessor,     as: Processor
-  alias CorpusBuilder.TwitterRateLimiter, as: RateLimiter
-  alias CorpusBuilder.TweetStore,         as: TweetStore
+  alias TwitterFeelings.CorpusBuilder.TweetProcessor,     as: Processor
+  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
+  alias TwitterFeelings.CorpusBuilder.TweetStore,         as: TweetStore
 
   @page_size 100
 
   def start_link do
-    GenServer.start_link(__MODULE__, {:no_max_id, 0}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def search_and_store(lang, mood, query_count) do
@@ -68,3 +69,4 @@ defmodule CorpusBuilder.TwitterSearch do
   end
 
 end
+
