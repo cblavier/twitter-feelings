@@ -14,6 +14,7 @@ TwitterFeelings is composed of 3 parts :
 
 ## Setup
 - install Elixir / Erlang / Redis
+- install dependencies `mix deps.get`
 - build script with `mix escript.build` command
 - have following environment variables declared:
    - TWITTER_CONSUMER_KEY
@@ -29,7 +30,7 @@ TODO
 
 ## Corpus Builder
 This application runs thousand of queries on Twitter Search API, to build a large corpus of Tweets that we will able to analyze later.
-Since we need to know if each retrieved status is either positive or negative, we will use Stanford approach (see link in intro) to categorize Twitter statutes according to the smileys they contain.
+Since we need to know if each retrieved status is either positive or negative, we will use Stanford approach (see link in intro) to categorize Twitter statuses according to the smileys they contain.
 
 Each tweet retrieved is:
   - filtered (we don't keep biased twitters containing both positive and negative smileys)
