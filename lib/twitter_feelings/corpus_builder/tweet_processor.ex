@@ -22,7 +22,9 @@ defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
     end
   end
 
-  def remove_accents(text) do
+  # private
+
+  defp remove_accents(text) do
     text
       |> String.replace(~r/(ä|â|à|á|ã|å|ā)/, "a")
       |> String.replace(~r/(ë|ê|è|é|ę|ė|ē)/, "e")

@@ -11,7 +11,7 @@ defmodule TwitterFeelings.Mixfile do
 
   def application do
     [
-      applications: [:kernel, :stdlib, :logger, :inets, :ssl, :redis_pool],
+      applications: [:kernel, :stdlib, :logger, :inets, :ssl, :redis_pool, :httpoison],
       mod: {TwitterFeelings, []}
     ]
   end
@@ -20,6 +20,7 @@ defmodule TwitterFeelings.Mixfile do
     [
       { :oauth, github: "tim/erlang-oauth" },
       { :extwitter, "~> 0.2" },
+      { :httpoison, "~> 0.6" },
       { :timex, "~> 0.13.3" },
       { :redis_pool, git: "https://github.com/le0pard/redis_pool" },
       { :mock, "0.1.0", only: :test }

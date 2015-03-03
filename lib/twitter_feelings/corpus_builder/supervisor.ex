@@ -2,9 +2,10 @@ defmodule TwitterFeelings.CorpusBuilder.Supervisor do
 
   use Supervisor
 
-  alias TwitterFeelings.CorpusBuilder.TwitterSearch,  as: TwitterSearch
-  alias TwitterFeelings.CorpusBuilder.TweetStore,     as: TweetStore
-  alias TwitterFeelings.Common.Stash,                 as: Stash
+  alias TwitterFeelings.CorpusBuilder.Builder,       as: Builder
+  alias TwitterFeelings.CorpusBuilder.TwitterSearch, as: TwitterSearch
+  alias TwitterFeelings.CorpusBuilder.TweetStore,    as: TweetStore
+  alias TwitterFeelings.Common.Stash,                as: Stash
 
   def start_link do
     Supervisor.start_link(__MODULE__, [])
@@ -12,10 +13,11 @@ defmodule TwitterFeelings.CorpusBuilder.Supervisor do
 
   def init(_args) do
     children = [
-      worker(Stash, [{:no_max_id, 0}, TwitterSearch.stash_name], id: TwitterSearch.stash_name),
-      worker(TwitterSearch, []),
+      worker(Stash, [{:no_max_id, 0}, Builder.stash_name], id: Builder.stash_name),
+      worker(Builder, []),
       worker(Stash, [{:no_lang, :no_mood}, TweetStore.stash_name], id: TweetStore.stash_name),
-      worker(TweetStore, [])
+      worker(TweetStore, []),
+      worker(TwitterSearch, [])
     ]
     supervise(children, strategy: :one_for_one)
   end

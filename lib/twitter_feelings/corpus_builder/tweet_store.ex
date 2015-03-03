@@ -32,7 +32,9 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
   def handle_cast({:store_tweet, _}, {:no_lang, _}), do: raise "no lang set on TweetStore"
   def handle_cast({:store_tweet, _}, {_, :no_mood}), do: raise "no mood set on TweetStore"
   def handle_cast({:store_tweet, tweet}, {lang, mood}) do
-    RedisPool.q({:global, :tf_pool}, ["SADD", redis_set_key(lang, mood), tweet])
+    Task.start_link fn ->
+      RedisPool.q({:global, :tf_pool}, ["SADD", redis_set_key(lang, mood), tweet])
+    end
     {:noreply, {lang, mood}}
   end
 

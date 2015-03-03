@@ -4,12 +4,11 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
   use Timex
   import Mock
 
-  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RL
-  alias ExTwitter.RateLimitExceededError, as: RateLimitError
+  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
 
   test "callback immediately when rate limit is ok" do
     with_mock IO, [puts: fn(_) -> end] do
-      RL.handle_rate_limit(fn -> IO.puts("here") end)
+      RateLimiter.handle_rate_limit(fn -> IO.puts("here") end)
       assert called IO.puts("here")
     end
   end
@@ -23,7 +22,7 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
     end
 
     with_mock IO, [puts: fn(_) -> end ] do
-      RL.handle_rate_limit(rate_limited_function)
+      RateLimiter.handle_rate_limit(rate_limited_function)
       :timer.sleep(10)
       assert called IO.puts("here")
     end
@@ -33,7 +32,7 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
     if Time.now(:secs) > reset_time do
       fun.()
     else
-      raise RateLimitError, reset_in: 0.1
+      raise ExTwitter.RateLimitExceededError, reset_in: 0.1
     end
   end
 

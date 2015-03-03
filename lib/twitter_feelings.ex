@@ -1,7 +1,7 @@
 defmodule TwitterFeelings do
 
-  alias TwitterFeelings.CorpusBuilder.TwitterSearch,  as: TwitterSearch
-  alias TwitterFeelings.CorpusBuilder.TweetStore,     as: TweetStore
+  alias TwitterFeelings.CorpusBuilder.Builder,    as: Builder
+  alias TwitterFeelings.CorpusBuilder.TweetStore, as: TweetStore
 
   @default_query_count 5000
   @default_lang        :en
@@ -34,7 +34,7 @@ defmodule TwitterFeelings do
   defp process({lang, mood, query_count}) do
     TweetStore.set_lang(lang)
     TweetStore.set_mood(mood)
-    TwitterSearch.search_and_store(String.to_atom(lang), mood, query_count)
+    Builder.build_corpus(String.to_atom(lang), mood, query_count)
   end
 
   defp process(:help) do
