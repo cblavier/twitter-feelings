@@ -2,11 +2,14 @@ defmodule TwitterFeelings.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :twitter_feelings,
-     version: "0.0.1",
-     elixir: "~> 1.0",
-     escript: escript_config,
-     deps: deps]
+    [
+      app: :twitter_feelings,
+      version: "0.0.1",
+      elixir: "~> 1.0",
+      escript: escript_config,
+      deps: deps,
+      test_coverage: [tool: ExCoveralls]
+    ]
   end
 
   def application do
@@ -23,7 +26,8 @@ defmodule TwitterFeelings.Mixfile do
       { :httpoison, "~> 0.6" },
       { :timex, "~> 0.13.3" },
       { :redis_pool, git: "https://github.com/le0pard/redis_pool" },
-      { :mock, "0.1.0", only: :test }
+      { :excoveralls, "~> 0.3", only: :dev },
+      { :mock, "0.1.0", only: [:dev, :test] }
     ]
   end
 

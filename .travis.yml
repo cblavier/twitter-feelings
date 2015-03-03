@@ -1,4 +1,9 @@
 language: elixir
+
 services:
   - redis-server
+
 env: TWITTER_CONSUMER_KEY=fake TWITTER_CONSUMER_SECRET=fake TWITTER_ACCESS_TOKEN=fake TWITTER_ACCESS_TOKEN_SECRET=fake
+
+after_success:
+ - "mix compile && mix coveralls.travis"
