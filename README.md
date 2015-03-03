@@ -1,5 +1,7 @@
 # TwitterFeelings
 
+[![Build Status](https://travis-ci.org/cblavier/twitter-feelings.svg?branch=master)](https://travis-ci.org/cblavier/twitter-feelings)
+
 TwitterFeelings is a Twitter sentiment analysis engine. It streams live statuses from Twitter and categorizes them according to their mood (positive or negative).
 It is written in Elixir, runs on Erlang VM and uses Redis for storage.
 
