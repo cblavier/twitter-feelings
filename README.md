@@ -39,8 +39,8 @@ Each tweet retrieved is:
 
 To build a large corpus of french positive and negative tweets, run the following commands:
 ```
-./twitter_feelings build-corpus --lang fr --mood positive --query-count 5000
-./twitter_feelings build-corpus --lang fr --mood negative --query-count 5000
+./twitter_feelings build-corpus --lang fr --mood positive
+./twitter_feelings build-corpus --lang fr --mood negative
 ```
 It will take hours since the application has to deal with Twitter rate limitations (450 queries per 15mn).
 Each query fetches 100 tweets at once.
