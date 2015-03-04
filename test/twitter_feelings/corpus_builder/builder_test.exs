@@ -6,9 +6,15 @@ defmodule TwitterFeelings.CorpusBuilder.BuilderTest do
   alias TwitterFeelings.CorpusBuilder.Builder,       as: Builder
   alias TwitterFeelings.CorpusBuilder.TweetStore,    as: TStore
   alias TwitterFeelings.CorpusBuilder.TwitterSearch, as: TSearch
+  alias TwitterFeelings.Common.Stash,                as: Stash
 
   setup do
-    Builder.start_link
+    {:ok, _ } = Stash.start({:no_max_id, 0}, Builder.stash_name)
+    {:ok, _ } = Builder.start
+    on_exit fn ->
+      Builder.stop
+      Stash.stop(Builder.stash_name)
+    end
     {:ok, []}
   end
 

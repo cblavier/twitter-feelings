@@ -1,10 +1,15 @@
 defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
 
   use GenServer
+  use TwitterFeelings.Common.Stoppable
 
   @page_size 100
 
   alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
+
+  def start do
+    GenServer.start(__MODULE__, bearer_token, name: __MODULE__)
+  end
 
   def start_link do
     GenServer.start_link(__MODULE__, bearer_token, name: __MODULE__)

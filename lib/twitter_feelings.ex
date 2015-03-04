@@ -6,11 +6,8 @@ defmodule TwitterFeelings do
   @default_query_count 5000
   @default_lang        :en
 
-  def start(_type, _args) do
-    TwitterFeelings.CorpusBuilder.Supervisor.start_link
-  end
-
   def main(argv) do
+    TwitterFeelings.CorpusBuilder.Supervisor.start_link
     argv
       |> parse_args
       |> process
@@ -32,8 +29,7 @@ defmodule TwitterFeelings do
   end
 
   defp process({lang, mood, query_count}) do
-    TweetStore.set_lang(lang)
-    TweetStore.set_mood(mood)
+    TweetStore.set_lang_and_mood(lang, mood)
     Builder.build_corpus(String.to_atom(lang), mood, query_count)
   end
 

@@ -2,16 +2,14 @@ defmodule TwitterFeelings.CorpusBuilder.Builder do
 
   use GenServer
   use TwitterFeelings.Common.Stashable, stash_name: :builder_stash
+  use TwitterFeelings.Common.Startable
+  use TwitterFeelings.Common.Stoppable
 
   require Logger
 
   alias TwitterFeelings.CorpusBuilder.TweetProcessor,     as: Processor
   alias TwitterFeelings.CorpusBuilder.TwitterSearch,      as: TwitterSearch
   alias TwitterFeelings.CorpusBuilder.TweetStore,         as: TweetStore
-
-  def start_link do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
-  end
 
   # Runs query_count calls on TwitterSearch, with given lang / mood.
   # Tweets are filtered, normalized and then stored into a Redis set.

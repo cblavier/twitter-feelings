@@ -3,10 +3,8 @@
 defmodule TwitterFeelings.Common.Stash do
 
   use GenServer
-
-  def start_link(state, name) do
-    GenServer.start_link( __MODULE__, state, name: name)
-  end
+  use TwitterFeelings.Common.Stoppable
+  use TwitterFeelings.Common.Startable
 
   def save_state(name, state) do
     GenServer.cast name, {:save_state, state}

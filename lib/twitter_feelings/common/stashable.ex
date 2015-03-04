@@ -13,7 +13,6 @@ defmodule TwitterFeelings.Common.Stashable do
       end
 
       def terminate(reason, state) do
-        IO.puts "#{stash_name} in terminate because of #{reason.inspect}"
         TwitterFeelings.Common.Stash.save_state(stash_name, state)
       end
 

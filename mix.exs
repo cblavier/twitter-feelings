@@ -14,8 +14,7 @@ defmodule TwitterFeelings.Mixfile do
 
   def application do
     [
-      applications: [:kernel, :stdlib, :logger, :inets, :ssl, :redis_pool, :httpoison],
-      mod: {TwitterFeelings, []}
+      applications: [:kernel, :stdlib, :logger, :inets, :ssl, :redis_pool, :httpoison]
     ]
   end
 

@@ -9,7 +9,10 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearchTest do
   setup do
     HTTPoison.start
     with_mock HTTPoison, [post!: fn(_,_,_) -> token_response end] do
-      TSearch.start_link
+      {:ok, _} = TSearch.start
+    end
+    on_exit fn ->
+      TSearch.stop
     end
     {:ok, []}
   end
