@@ -1,6 +1,6 @@
 # TwitterFeelings
 
-[![Build Status](https://travis-ci.org/cblavier/twitter-feelings.svg?branch=master)](https://travis-ci.org/cblavier/twitter-feelings)[![Coverage Status](https://coveralls.io/repos/cblavier/twitter-feelings/badge.svg)](https://coveralls.io/r/cblavier/twitter-feelings)
+[![Build Status](https://travis-ci.org/cblavier/twitter-feelings.svg?branch=master)](https://travis-ci.org/cblavier/twitter-feelings)[![Coverage Status](https://coveralls.io/repos/cblavier/twitter-feelings/badge.svg?branch=master)](https://coveralls.io/r/cblavier/twitter-feelings?branch=master)
 
 TwitterFeelings is a Twitter sentiment analysis engine. It streams live statuses from Twitter and categorizes them according to their mood (positive or negative).
 It is written in Elixir, runs on Erlang VM and uses Redis for storage.
@@ -14,6 +14,7 @@ TwitterFeelings is composed of 3 parts :
 
 ## Setup
 - install Elixir / Erlang / Redis
+- install dependencies `mix deps.get`
 - build script with `mix escript.build` command
 - have following environment variables declared:
    - TWITTER_CONSUMER_KEY
@@ -29,7 +30,7 @@ TODO
 
 ## Corpus Builder
 This application runs thousand of queries on Twitter Search API, to build a large corpus of Tweets that we will able to analyze later.
-Since we need to know if each retrieved status is either positive or negative, we will use Stanford approach (see link in intro) to categorize Twitter statutes according to the smileys they contain.
+Since we need to know if each retrieved status is either positive or negative, we will use Stanford approach (see link in intro) to categorize Twitter statuses according to the smileys they contain.
 
 Each tweet retrieved is:
   - filtered (we don't keep biased twitters containing both positive and negative smileys)
