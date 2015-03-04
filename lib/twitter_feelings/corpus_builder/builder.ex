@@ -11,39 +11,40 @@ defmodule TwitterFeelings.CorpusBuilder.Builder do
   alias TwitterFeelings.CorpusBuilder.TwitterSearch,      as: TwitterSearch
   alias TwitterFeelings.CorpusBuilder.TweetStore,         as: TweetStore
 
-  # Runs query_count calls on TwitterSearch, with given lang / mood.
+  # Calls TwitterSearch with given lang / mood until
   # Tweets are filtered, normalized and then stored into a Redis set.
-  def build_corpus(lang, mood, query_count) do
-    GenServer.cast(__MODULE__, {:set_query_count, query_count})
-    search_and_store_loop(lang, mood)
+  def build_corpus(lang, mood, tweet_count) do
+    search_and_store_loop(lang, mood, tweet_count)
   end
 
   # server implementation
 
-  def handle_call({:search_and_store, _lang, _mood}, _from, {max_id, 0}) do
-    {:reply, :stop, {max_id, 0}}
+  def handle_call({:search_and_store, _lang, _mood}, _from, :no_more_max_id) do
+    Logger.debug("Stopping search, search exhausted")
+    {:reply, :stop, :no_more_max_id}
   end
 
-  def handle_call({:search_and_store, lang, mood}, _from, {max_id, query_count}) do
-    Logger.debug("searching tweets for lang:#{lang}, mood:#{mood}. Still #{query_count} queries to run.")
-    {:ok, statuses, max_id} = TwitterSearch.search(lang, mood, max_id)
+  def handle_call({:search_and_store, lang, mood}, _from, max_id) do
+    {:ok, statuses, new_max_id} = TwitterSearch.search(lang, mood, max_id)
     Task.start_link fn ->
       process_statuses(statuses)
     end
-    {:reply, :ok, {max_id, query_count - 1}}
-  end
-
-  def handle_cast({:set_query_count, query_count}, {max_id, _}) do
-    {:noreply, {max_id, query_count}}
+    {:reply, :ok, new_max_id}
   end
 
   # private
 
-  defp search_and_store_loop(lang, mood) do
-    result = GenServer.call(__MODULE__, {:search_and_store, lang, mood}, :infinity)
-    case result do
-    :ok -> search_and_store_loop(lang, mood)
-    :stop -> :ok
+  defp search_and_store_loop(lang, mood, tweet_count) do
+    actual_tweet_count = TweetStore.tweet_count
+    if actual_tweet_count >= tweet_count do
+      :ok
+    else
+      Logger.debug("Searching with #{lang} and #{mood}. #{actual_tweet_count} tweets stored.")
+      result = GenServer.call(__MODULE__, {:search_and_store, lang, mood}, :infinity)
+      case result do
+      :ok   -> search_and_store_loop(lang, mood, tweet_count)
+      :stop -> :ok
+      end
     end
   end
 

@@ -13,7 +13,7 @@ defmodule TwitterFeelings.CorpusBuilder.Supervisor do
 
   def init(_args) do
     children = [
-      worker(Stash, [{:no_max_id, 0}, Builder.stash_name], id: Builder.stash_name),
+      worker(Stash, [:no_max_id, Builder.stash_name], id: Builder.stash_name),
       worker(Builder, []),
       worker(Stash, [{:no_lang, :no_mood}, TweetStore.stash_name], id: TweetStore.stash_name),
       worker(TweetStore, []),

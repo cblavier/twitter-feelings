@@ -98,5 +98,4 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearchTest do
     end
   end
 
-
 end

@@ -84,8 +84,12 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
 
   defp new_max_id(json) do
     next_results = get_in(json, ["search_metadata", "next_results"])
-    Regex.named_captures(~r/max_id=(?<max_id>\w+)&/, next_results)["max_id"]
-      |> String.to_integer
+    max_id = Regex.named_captures(~r/max_id=(?<max_id>\w+)&/, next_results)["max_id"]
+    if max_id do
+      String.to_integer(max_id)
+    else
+      :no_more_max_id
+    end
   end
 
 end

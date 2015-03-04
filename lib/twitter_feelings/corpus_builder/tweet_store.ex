@@ -14,6 +14,15 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
     GenServer.cast(__MODULE__, {:store_tweet, tweet})
   end
 
+  def clear do
+    GenServer.cast(__MODULE__, :clear_set)
+  end
+
+  def tweet_count do
+    {:ok, count} = GenServer.call(__MODULE__, :tweet_count)
+    String.to_integer(count)
+  end
+
   # server implementation
 
   def handle_cast({:set_lang, lang}, {_, mood}) do
@@ -32,6 +41,16 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
     {:noreply, {lang, mood}}
   end
 
+  def handle_cast(:clear_set, {lang, mood}) do
+    redis_query(["DEL", redis_set_key(lang, mood)])
+    {:noreply, {lang, mood}}
+  end
+
+  def handle_call(:tweet_count, _from, {lang, mood}) do
+    count = redis_query(["SCARD", redis_set_key(lang, mood)])
+    {:reply, count, {lang, mood}}
+  end
+
   # private
 
   defp store_tweet(key, tweet) do
@@ -43,7 +62,12 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
   end
 
   defp redis_set_key(lang, mood) do
-    "tf-corpus-#{lang}-#{mood}"
+    key = "tf-corpus-#{lang}-#{mood}"
+    if Application.get_env(TwitterFeelings, :test) do
+      "test-#{key}"
+    else
+      key
+    end
   end
 
 end

@@ -8,15 +8,21 @@ defmodule TwitterFeelings.Common.Stoppable do
       end
 
       def stop(name) do
+        if alive?(name) do
+          GenServer.call(name, :stop)
+        end
+      end
+
+      def alive? do
+        alive?(__MODULE__)
+      end
+
+      def alive?(name) do
         pid = Process.whereis(name)
         cond do
-        is_pid(pid) ->
-          if Process.alive?(pid) do
-            GenServer.call(name, :stop)
-          end
-        true -> :ok
+          is_pid(pid) -> Process.alive?(pid)
+          true -> false
         end
-        :ok
       end
 
       def handle_call(:stop, _from, state) do
