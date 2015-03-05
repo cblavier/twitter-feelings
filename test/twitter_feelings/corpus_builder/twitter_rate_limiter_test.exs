@@ -1,7 +1,6 @@
 defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
 
   use ExUnit.Case, async: false
-  use Timex
   import Mock
   import TimeHelper
 
@@ -25,8 +24,9 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
 
     with_mock IO, [puts: fn(_) -> end ] do
       RateLimiter.handle_rate_limit(rate_limited_function)
-      :timer.sleep(10)
-      assert called IO.puts("here")
+      wait_until fn ->
+        assert called IO.puts("here")
+      end
     end
   end
 

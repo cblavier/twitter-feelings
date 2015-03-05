@@ -1,6 +1,7 @@
 defmodule TwitterFeelings.CorpusBuilder.TweetStoreTest do
 
   use ExUnit.Case, async: true
+  import TimeHelper
 
   alias TwitterFeelings.CorpusBuilder.TweetStore, as: TweetStore
   alias TwitterFeelings.Common.Stash,             as: Stash
@@ -33,7 +34,9 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStoreTest do
     TweetStore.set_lang_and_mood(:fr, :positive)
     assert_tweet_count(0)
     TweetStore.store_tweet("foo")
-    assert_tweet_count(1)
+    wait_until fn ->
+      assert_tweet_count(1)
+    end
   end
 
   def assert_server_error(monitor, message) do
@@ -41,7 +44,6 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStoreTest do
   end
 
   def assert_tweet_count(expected_value) do
-    :timer.sleep(10)
     count = TweetStore.tweet_count
     assert ^count = expected_value
   end
