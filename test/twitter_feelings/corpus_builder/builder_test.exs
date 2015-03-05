@@ -20,7 +20,7 @@ defmodule TwitterFeelings.CorpusBuilder.BuilderTest do
   end
 
   test "processes and store tweets" do
-    time = x_msecs_from_now(700)
+    time = x_msecs_from_now(500)
     tweet_count = fn ->
       change_behavior_after(time,
         fn -> 1 end,

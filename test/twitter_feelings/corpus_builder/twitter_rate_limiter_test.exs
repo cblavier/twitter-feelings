@@ -15,11 +15,11 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
   end
 
   test "callback after small delay when rate limit is reset soon" do
-    reset_time = x_msecs_from_now(200)
+    reset_time = x_msecs_from_now(100)
     rate_limited_function = fn ->
       change_behavior_after(reset_time,
-        fn -> IO.puts("here") end,
-        fn -> raise ExTwitter.RateLimitExceededError, reset_in: 0.1 end
+        fn -> raise ExTwitter.RateLimitExceededError, reset_in: 0.1 end,
+        fn -> IO.puts("here") end
       )
     end
 
