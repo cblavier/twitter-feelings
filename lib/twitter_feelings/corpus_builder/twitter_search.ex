@@ -3,9 +3,10 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
   use GenServer
   use TwitterFeelings.Common.GenServer.Stoppable
 
-  @page_size 100
-
   alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter
+  alias TwitterFeelings.Common.Smileys
+
+  @page_size 100
 
   def start do
     GenServer.start(__MODULE__, bearer_token, name: __MODULE__)
@@ -79,8 +80,8 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
   defp search_params(lang, mood, :no_max_id), do: %{q: query(mood), lang: "#{lang}", include_entities: false, count: @page_size}
   defp search_params(lang, mood, max_id),     do: %{q: query(mood), lang: "#{lang}", include_entities: false, count: @page_size, max_id: max_id}
 
-  defp query(:positive), do: ":)"
-  defp query(:negative), do: ":("
+  defp query(:positive), do: Enum.join(Smileys.positive, " OR ")
+  defp query(:negative), do: Enum.join(Smileys.negative, " OR ")
 
   defp new_max_id(json) do
     next_results = get_in(json, ["search_metadata", "next_results"])
