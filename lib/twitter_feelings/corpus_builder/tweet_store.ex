@@ -1,9 +1,9 @@
 defmodule TwitterFeelings.CorpusBuilder.TweetStore do
 
   use GenServer
-  use TwitterFeelings.Common.Stashable, stash_name: :tweet_store_stash
-  use TwitterFeelings.Common.Startable
-  use TwitterFeelings.Common.Stoppable
+  use TwitterFeelings.Common.GenServer.Stashable, stash_name: :tweet_store_stash
+  use TwitterFeelings.Common.GenServer.Startable
+  use TwitterFeelings.Common.GenServer.Stoppable
 
   def set_lang_and_mood(lang, mood) do
     GenServer.cast(__MODULE__, {:set_lang, lang})

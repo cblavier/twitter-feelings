@@ -1,11 +1,11 @@
 defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
 
   use GenServer
-  use TwitterFeelings.Common.Stoppable
+  use TwitterFeelings.Common.GenServer.Stoppable
 
   @page_size 100
 
-  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
+  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter
 
   def start do
     GenServer.start(__MODULE__, bearer_token, name: __MODULE__)
@@ -23,7 +23,7 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
   # server implementation
 
   def handle_call({:search, lang, mood, max_id}, _from, token) do
-    reply = RateLimiter.handle_rate_limit fn ->
+    reply = TwitterRateLimiter.handle_rate_limit fn ->
       json = twitter_search(search_params(lang, mood, max_id), token)
       { get_in(json, ["statuses"]), new_max_id(json) }
     end

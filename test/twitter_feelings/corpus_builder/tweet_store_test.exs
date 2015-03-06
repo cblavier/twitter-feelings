@@ -1,10 +1,10 @@
 defmodule TwitterFeelings.CorpusBuilder.TweetStoreTest do
 
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   import TimeHelper
 
-  alias TwitterFeelings.CorpusBuilder.TweetStore, as: TweetStore
-  alias TwitterFeelings.Common.Stash,             as: Stash
+  alias TwitterFeelings.CorpusBuilder.TweetStore
+  alias TwitterFeelings.Common.GenServer.Stash
 
   setup do
     {:ok, _ } = Stash.start({:no_lang, :no_mood},TweetStore.stash_name)

@@ -1,4 +1,4 @@
-defmodule TwitterFeelings.Common.Stoppable do
+defmodule TwitterFeelings.Common.GenServer.Stoppable do
 
   defmacro __using__(opts) do
     quote do

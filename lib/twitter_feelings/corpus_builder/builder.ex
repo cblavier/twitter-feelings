@@ -1,9 +1,9 @@
 defmodule TwitterFeelings.CorpusBuilder.Builder do
 
   use GenServer
-  use TwitterFeelings.Common.Stashable, stash_name: :builder_stash
-  use TwitterFeelings.Common.Startable
-  use TwitterFeelings.Common.Stoppable
+  use TwitterFeelings.Common.GenServer.Stashable, stash_name: :builder_stash
+  use TwitterFeelings.Common.GenServer.Startable
+  use TwitterFeelings.Common.GenServer.Stoppable
 
   require Logger
 

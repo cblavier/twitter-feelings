@@ -1,10 +1,10 @@
 # Stash is a worker process that can be used by GenServers
 # to store state outside of their process (and retrieve it after a failure)
-defmodule TwitterFeelings.Common.Stash do
+defmodule TwitterFeelings.Common.GenServer.Stash do
 
   use GenServer
-  use TwitterFeelings.Common.Stoppable
-  use TwitterFeelings.Common.Startable
+  use TwitterFeelings.Common.GenServer.Stoppable
+  use TwitterFeelings.Common.GenServer.Startable
 
   def save_state(name, state) do
     GenServer.cast name, {:save_state, state}

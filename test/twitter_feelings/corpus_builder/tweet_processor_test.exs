@@ -1,4 +1,5 @@
 defmodule TwitterFeelings.CorpusBuilder.TweetnormalizeorTest do
+
   use ExUnit.Case, async: true
 
   alias TwitterFeelings.CorpusBuilder.TweetProcessor, as: TP

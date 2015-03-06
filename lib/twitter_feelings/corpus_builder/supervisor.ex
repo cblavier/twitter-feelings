@@ -2,10 +2,10 @@ defmodule TwitterFeelings.CorpusBuilder.Supervisor do
 
   use Supervisor
 
-  alias TwitterFeelings.CorpusBuilder.Builder,       as: Builder
-  alias TwitterFeelings.CorpusBuilder.TwitterSearch, as: TwitterSearch
-  alias TwitterFeelings.CorpusBuilder.TweetStore,    as: TweetStore
-  alias TwitterFeelings.Common.Stash,                as: Stash
+  alias TwitterFeelings.CorpusBuilder.Builder
+  alias TwitterFeelings.CorpusBuilder.TwitterSearch
+  alias TwitterFeelings.CorpusBuilder.TweetStore
+  alias TwitterFeelings.Common.GenServer.Stash
 
   def start_link do
     Supervisor.start_link(__MODULE__, [])

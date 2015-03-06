@@ -1,7 +1,7 @@
 defmodule TwitterFeelings do
 
-  alias TwitterFeelings.CorpusBuilder.Builder,    as: Builder
-  alias TwitterFeelings.CorpusBuilder.TweetStore, as: TweetStore
+  alias TwitterFeelings.CorpusBuilder.Builder
+  alias TwitterFeelings.CorpusBuilder.TweetStore
 
   @default_tweet_count 500_000
   @default_lang        "en"

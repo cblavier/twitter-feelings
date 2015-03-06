@@ -4,11 +4,11 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
   import Mock
   import TimeHelper
 
-  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
+  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter
 
   test "callback immediately when rate limit is ok" do
     with_mock IO, [puts: fn(_) -> end] do
-      RateLimiter.handle_rate_limit(fn -> IO.puts("here") end)
+      TwitterRateLimiter.handle_rate_limit(fn -> IO.puts("here") end)
       assert called IO.puts("here")
     end
   end
@@ -23,7 +23,7 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterRateLimiterTest do
     end
 
     with_mock IO, [puts: fn(_) -> end ] do
-      RateLimiter.handle_rate_limit(rate_limited_function)
+      TwitterRateLimiter.handle_rate_limit(rate_limited_function)
       wait_until fn ->
         assert called IO.puts("here")
       end

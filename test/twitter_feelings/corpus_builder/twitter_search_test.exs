@@ -3,23 +3,23 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearchTest do
   use ExUnit.Case, async: false
   import Mock
 
-  alias TwitterFeelings.CorpusBuilder.TwitterSearch,      as: TSearch
-  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter, as: RateLimiter
+  alias TwitterFeelings.CorpusBuilder.TwitterSearch
+  alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter
 
   setup do
     HTTPoison.start
     with_mock HTTPoison, [post!: fn(_,_,_) -> token_response end] do
-      {:ok, _} = TSearch.start
+      {:ok, _} = TwitterSearch.start
     end
     on_exit fn ->
-      TSearch.stop
+      TwitterSearch.stop
     end
     {:ok, []}
   end
 
   test "it fetches statuses and max_id" do
     with_mock HTTPoison, [get: fn("https://api.twitter.com/1.1/search/tweets.json",_,_) -> {:ok, statuses_response} end] do
-      {:ok, statuses, result_max_id} = TSearch.search(:fr, :positive, :no_max_id)
+      {:ok, statuses, result_max_id} = TwitterSearch.search(:fr, :positive, :no_max_id)
       for i <- 0..2 do
          tweet_status = Enum.at(statuses, i)["text"]
          assert ^tweet_status = status(i)
@@ -30,16 +30,16 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearchTest do
 
   test "it throws rate_limit_errors when rate limit is reached" do
     with_mock HTTPoison, [get: fn("https://api.twitter.com/1.1/search/tweets.json",_,_) -> {:ok, rate_limit_error} end] do
-      with_mock RateLimiter, [handle_rate_limit: expect_raise_exception(ExTwitter.RateLimitExceededError)] do
-        TSearch.search(:fr, :positive, :no_max_id)
+      with_mock TwitterRateLimiter, [handle_rate_limit: expect_raise_exception(ExTwitter.RateLimitExceededError)] do
+        TwitterSearch.search(:fr, :positive, :no_max_id)
       end
     end
   end
 
   test "it throws error when other errors occur" do
     with_mock HTTPoison, [get: fn("https://api.twitter.com/1.1/search/tweets.json",_,_) -> {:ok, other_error} end] do
-      with_mock RateLimiter, [handle_rate_limit: expect_raise_exception(ExTwitter.Error)] do
-        TSearch.search(:fr, :positive, :no_max_id)
+      with_mock TwitterRateLimiter, [handle_rate_limit: expect_raise_exception(ExTwitter.Error)] do
+        TwitterSearch.search(:fr, :positive, :no_max_id)
       end
     end
   end

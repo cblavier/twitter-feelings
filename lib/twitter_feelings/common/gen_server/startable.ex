@@ -1,4 +1,4 @@
-defmodule TwitterFeelings.Common.Startable do
+defmodule TwitterFeelings.Common.GenServer.Startable do
 
   defmacro __using__(_opts) do
     quote do
