@@ -31,9 +31,9 @@ defmodule TwitterFeelings.CorpusBuilder.BuilderTest do
       with_mock TweetStore, [store_tweet: fn(_) -> end, tweet_count: tweet_count] do
         Builder.build_corpus(:fr, :positive, 2)
         wait_until fn ->
-          assert called TweetStore.store_tweet("thee namaste nerdz #freebandnames")
-          assert called TweetStore.store_tweet("mexican heaven the hell #freebandnames")
-          assert called TweetStore.store_tweet("the foolish mortals #freebandnames")
+          assert called TweetStore.store_tweet("thee namaste nerdz #freebandnames :)")
+          assert called TweetStore.store_tweet("mexican heaven the hell #freebandnames :)")
+          assert called TweetStore.store_tweet("the foolish mortals #freebandnames :D")
         end
       end
     end
@@ -44,9 +44,9 @@ defmodule TwitterFeelings.CorpusBuilder.BuilderTest do
       with_mock TweetStore, [store_tweet: fn(_) -> end, tweet_count: fn -> 1 end] do
         Builder.build_corpus(:fr, :positive, 2)
         wait_until fn ->
-          assert called TweetStore.store_tweet("thee namaste nerdz #freebandnames")
-          assert called TweetStore.store_tweet("mexican heaven the hell #freebandnames")
-          assert called TweetStore.store_tweet("the foolish mortals #freebandnames")
+          assert called TweetStore.store_tweet("thee namaste nerdz #freebandnames :)")
+          assert called TweetStore.store_tweet("mexican heaven the hell #freebandnames :)")
+          assert called TweetStore.store_tweet("the foolish mortals #freebandnames :D")
         end
       end
     end

@@ -34,6 +34,13 @@ defmodule TwitterFeelings.CorpusBuilder.TweetnormalizeorTest do
     assert TP.normalize("ce tweet est très accentué. Très!") == "tweet est tres accentue tres"
   end
 
+  test "it keeps smileys and appends them at the end" do
+    assert TP.normalize("that's really cool :)") == "that's really cool :)"
+    assert TP.normalize(":) that's really cool :)") == "that's really cool :) :)"
+    assert TP.normalize(":((( that's not cool") == "that's not cool :((("
+    assert TP.normalize("that's :p :) really :DD cool") == "that's really cool :) :DD"
+  end
+
   # valid?
 
   test "basic tweet is valid" do

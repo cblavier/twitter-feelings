@@ -80,8 +80,8 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
   defp search_params(lang, mood, :no_max_id), do: %{q: query(mood), lang: "#{lang}", include_entities: false, count: @page_size}
   defp search_params(lang, mood, max_id),     do: %{q: query(mood), lang: "#{lang}", include_entities: false, count: @page_size, max_id: max_id}
 
-  defp query(:positive), do: Enum.join(Smileys.positive, " OR ")
-  defp query(:negative), do: Enum.join(Smileys.negative, " OR ")
+  defp query(:positive), do: ":)"
+  defp query(:negative), do: ":("
 
   defp new_max_id(json) do
     next_results = get_in(json, ["search_metadata", "next_results"])

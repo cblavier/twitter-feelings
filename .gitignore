@@ -2,4 +2,6 @@
 /deps
 erl_crash.dump
 /twitter_feelings
+*.sublime-project
+*.sublime-workspace
 *.ez

@@ -26,6 +26,8 @@ defmodule TwitterFeelings.Common.GenServer.Stashable do
         GenServer.call(name, :get_state)
       end
 
+      # server implementation
+
       def handle_call(:get_state, _from, state) do
         {:reply, state, state}
       end

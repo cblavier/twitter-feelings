@@ -3,6 +3,7 @@ defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
   alias TwitterFeelings.Common.Smileys
 
   def normalize(tweet_text) do
+    smileys = extract_smileys(tweet_text)
     String.downcase(tweet_text)
       |> String.split
       |> Stream.map(fn(text)    -> remove_accents(text) end)                            # removes accents
@@ -13,6 +14,7 @@ defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
       |> Stream.reject(fn(text) -> Regex.match?(~r/^\s*$/, text) end)                   # remove empty strings
       |> Stream.map(fn(text)    -> Regex.replace(~r/^[\s]+|[\s]+$/, text, "") end)      # remove leading and trailing spaces
       |> Stream.reject(fn(text) -> Regex.match?(~r/^[a-zA_Z]{1,2}$/,text) end)          # remove very short words
+      |> Enum.concat(extract_smileys(tweet_text))
       |> Enum.join " "
   end
 
@@ -25,6 +27,12 @@ defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
   end
 
   # private
+
+  defp extract_smileys(text) do
+    text
+      |> String.split
+      |> Enum.filter(fn(text) -> String.contains?(text, Smileys.all) end )
+  end
 
   defp remove_accents(text) do
     text

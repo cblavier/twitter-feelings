@@ -39,7 +39,7 @@ defmodule TwitterFeelings.CorpusBuilder.Builder do
     if actual_tweet_count >= tweet_count do
       :ok
     else
-      Logger.debug("Searching with #{lang} and #{mood}. #{actual_tweet_count} tweets stored.")
+      Logger.debug("Searching #{lang} tweets with #{mood} mood. #{actual_tweet_count} tweets stored.")
       result = GenServer.call(__MODULE__, {:search_and_store, lang, mood}, :infinity)
       case result do
       :ok   -> search_and_store_loop(lang, mood, tweet_count)
