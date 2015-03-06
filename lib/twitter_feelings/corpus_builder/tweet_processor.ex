@@ -1,5 +1,7 @@
 defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
 
+  alias TwitterFeelings.Common.Smileys
+
   def normalize(tweet_text) do
     String.downcase(tweet_text)
       |> String.split
@@ -35,11 +37,11 @@ defmodule TwitterFeelings.CorpusBuilder.TweetProcessor do
   end
 
   defp has_positive_smiley?(text) do
-    String.contains?(text, [":)", ": )", ":-)", ":D", ":-D", "=)"])
+    String.contains?(text, Smileys.positive)
   end
 
   defp has_negative_smiley?(text) do
-    String.contains?(text, [":(", ": (", ":-("])
+    String.contains?(text, Smileys.negative)
   end
 
 end

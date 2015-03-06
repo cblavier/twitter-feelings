@@ -34,7 +34,6 @@ defmodule TwitterFeelings.CorpusBuilder.TweetnormalizeorTest do
     assert TP.normalize("ce tweet est très accentué. Très!") == "tweet est tres accentue tres"
   end
 
-
   # valid?
 
   test "basic tweet is valid" do
