@@ -40,12 +40,13 @@ It will take hours since the application has to deal with Twitter rate limitatio
 Each query fetches 100 tweets at once.
 
 ## Learning
-Live Tweets will a be categorized using the _Naive Bayesian_ approach. The great benefit of this method is that a lot of stuff can be precomputed making the live computation very fast. The purpose of this module is to precompute (from existings tweets corpus) the probability for each monogram (ie word) to appear in either positive or negative messages.
+Live Tweets will a be categorized using the _Naive Bayesian_ approach. The great benefit of this method is that a lot of stuff can be precomputed making the live computation very fast. The purpose of this module is to precompute (from existing tweets corpus) the probability for each monogram (ie word) to appear in either positive or negative messages.
 
-Once at least two corpus have been built (both negative and positive moods on a single language), run the learning module with this command:
+Once two corpus have been built (both negative and positive moods on a single language), run the learning module with this command:
 ```
 ./twitter_feelings learn --lang fr
 ```
+On my computer (4ghz i7), it takes about 10mn to learn from 2 x 500.000 tweets.
 
 ## Streaming Machine
 TODO
