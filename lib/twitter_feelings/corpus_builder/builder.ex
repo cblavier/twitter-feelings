@@ -14,13 +14,14 @@ defmodule TwitterFeelings.CorpusBuilder.Builder do
   # Calls TwitterSearch with given lang / mood until
   # Tweets are filtered, normalized and then stored into a Redis set.
   def build_corpus(lang, mood, tweet_count) do
+    TweetStore.set_lang_and_mood(lang, mood)
     search_and_store_loop(lang, mood, tweet_count)
   end
 
   # server implementation
 
   def handle_call({:search_and_store, _lang, _mood}, _from, :no_more_max_id) do
-    Logger.debug("Stopping search, search exhausted")
+    Logger.debug("Twitter search exhausted, stopping.")
     {:reply, :stop, :no_more_max_id}
   end
 
@@ -37,6 +38,7 @@ defmodule TwitterFeelings.CorpusBuilder.Builder do
   defp search_and_store_loop(lang, mood, tweet_count) do
     actual_tweet_count = TweetStore.tweet_count
     if actual_tweet_count >= tweet_count do
+      Logger.debug("#{actual_tweet_count} tweets stored, stopping.")
       :ok
     else
       Logger.debug("Searching #{lang} tweets with #{mood} mood. #{actual_tweet_count} tweets stored.")

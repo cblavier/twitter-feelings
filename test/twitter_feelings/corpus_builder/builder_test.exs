@@ -28,7 +28,7 @@ defmodule TwitterFeelings.CorpusBuilder.BuilderTest do
       )
     end
     with_mock TwitterSearch, [search: fn(_,_,_) -> {:ok, statuses, "249279667666817023"} end] do
-      with_mock TweetStore, [store_tweet: fn(_) -> end, tweet_count: tweet_count] do
+      with_mock TweetStore, [set_lang_and_mood: fn(_,_) -> end, store_tweet: fn(_) -> end, tweet_count: tweet_count] do
         Builder.build_corpus(:fr, :positive, 2)
         wait_until fn ->
           assert called TweetStore.store_tweet("thee namaste nerdz #freebandnames :)")
@@ -41,7 +41,7 @@ defmodule TwitterFeelings.CorpusBuilder.BuilderTest do
 
   test "it stops when there is no longer max_id" do
     with_mock TwitterSearch, [search: fn(_,_,_) -> {:ok, statuses, :no_more_max_id} end] do
-      with_mock TweetStore, [store_tweet: fn(_) -> end, tweet_count: fn -> 1 end] do
+      with_mock TweetStore, [set_lang_and_mood: fn(_,_) -> end, store_tweet: fn(_) -> end, tweet_count: fn -> 1 end] do
         Builder.build_corpus(:fr, :positive, 2)
         wait_until fn ->
           assert called TweetStore.store_tweet("thee namaste nerdz #freebandnames :)")

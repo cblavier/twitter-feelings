@@ -1,7 +1,7 @@
 defmodule TwitterFeelings.Common.Smileys do
 
   def positive do
-    [":)", ":-)", ":D", ":-D", "=)"]
+    [":)", ":-)", ":D", ":-D", "=)", ":p"]
   end
 
   def negative do

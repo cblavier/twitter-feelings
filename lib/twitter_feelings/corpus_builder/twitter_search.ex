@@ -4,7 +4,6 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
   use TwitterFeelings.Common.GenServer.Stoppable
 
   alias TwitterFeelings.CorpusBuilder.TwitterRateLimiter
-  alias TwitterFeelings.Common.Smileys
 
   @page_size 100
 
@@ -85,9 +84,8 @@ defmodule TwitterFeelings.CorpusBuilder.TwitterSearch do
 
   defp new_max_id(json) do
     next_results = get_in(json, ["search_metadata", "next_results"])
-    max_id = Regex.named_captures(~r/max_id=(?<max_id>\w+)&/, next_results)["max_id"]
-    if max_id do
-      String.to_integer(max_id)
+    if next_results do
+      Regex.named_captures(~r/max_id=(?<max_id>\w+)&/, next_results)["max_id"] |> String.to_integer
     else
       :no_more_max_id
     end

@@ -38,7 +38,7 @@ defmodule TwitterFeelings.CorpusBuilder.TweetnormalizeorTest do
     assert TP.normalize("that's really cool :)") == "that's really cool :)"
     assert TP.normalize(":) that's really cool :)") == "that's really cool :) :)"
     assert TP.normalize(":((( that's not cool") == "that's not cool :((("
-    assert TP.normalize("that's :p :) really :DD cool") == "that's really cool :) :DD"
+    assert TP.normalize("that's :p :) really :DD cool") == "that's really cool :p :) :DD"
   end
 
   # valid?
