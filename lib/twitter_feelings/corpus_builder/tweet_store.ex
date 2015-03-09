@@ -21,6 +21,8 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
     String.to_integer(count)
   end
 
+  def initial_state, do: {:no_lang, :no_mood}
+
   # server implementation
 
   def handle_cast({:set_lang, lang}, {_, mood}) do

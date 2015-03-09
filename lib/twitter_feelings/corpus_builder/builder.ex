@@ -18,6 +18,8 @@ defmodule TwitterFeelings.CorpusBuilder.Builder do
     search_and_store_loop(lang, mood, tweet_count)
   end
 
+  def initial_state, do: :no_max_id
+
   # server implementation
 
   def handle_call({:search_and_store, _lang, _mood}, _from, :no_more_max_id) do
