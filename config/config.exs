@@ -31,5 +31,5 @@ config :ex_twitter, :oauth, [
 ]
 
 config :redis_pool, :pools, [
-  tf_pool: [size: 10, hostname: "127.0.0.1", port: 6379]
+  tf_pool: [size: 30, hostname: "127.0.0.1", port: 6379]
 ]

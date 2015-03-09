@@ -4,10 +4,9 @@ defmodule TwitterFeelings do
   alias TwitterFeelings.Learning.Learner
 
   @default_tweet_count 500_000
-  @default_lang        "en"
+  @default_lang        :en
 
   def main(argv) do
-    TwitterFeelings.CorpusBuilder.Supervisor.start_link
     argv
       |> parse_args
       |> process
@@ -38,16 +37,20 @@ defmodule TwitterFeelings do
   end
 
   defp process({:build_corpus, lang, mood, tweet_count}) do
+    TwitterFeelings.CorpusBuilder.Supervisor.start_link
     Builder.build_corpus(lang_atom(lang), mood, tweet_count)
   end
 
   defp process({:learn, lang}) do
+    TwitterFeelings.Learning.Supervisor.start_link
     Learner.learn(lang_atom(lang))
   end
 
   defp process(:help) do
     IO.puts """
-    usage: twitter_feelings build-corpus --lang [ language ] --mood [ positive | negative ] --count [ count ]
+    usage:
+    twitter_feelings build-corpus --lang [ language ] --mood [ positive | negative ] --count [ count ]
+    twitter_feelings learn --lang [ language ]
     """
   end
 

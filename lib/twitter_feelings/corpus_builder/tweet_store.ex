@@ -16,10 +16,6 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
     GenServer.cast(__MODULE__, {:store_tweet, tweet})
   end
 
-  def clear do
-    GenServer.cast(__MODULE__, :clear_set)
-  end
-
   def tweet_count do
     {:ok, count} = GenServer.call(__MODULE__, :tweet_count)
     String.to_integer(count)
@@ -40,11 +36,6 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStore do
 
   def handle_cast({:store_tweet, tweet}, {lang, mood}) do
     Task.start_link(fn -> store_tweet(Redis.corpus_key(lang, mood), tweet) end)
-    {:noreply, {lang, mood}}
-  end
-
-  def handle_cast(:clear_set, {lang, mood}) do
-    Redis.run(["DEL", Redis.corpus_key(lang, mood)])
     {:noreply, {lang, mood}}
   end
 

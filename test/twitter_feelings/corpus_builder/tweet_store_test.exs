@@ -5,15 +5,15 @@ defmodule TwitterFeelings.CorpusBuilder.TweetStoreTest do
 
   alias TwitterFeelings.CorpusBuilder.TweetStore
   alias TwitterFeelings.Common.GenServer.Stash
+  alias TwitterFeelings.Common.Redis
 
   setup do
+    Redis.clear_keys("test-*")
     {:ok, _ } = Stash.start({:no_lang, :no_mood},TweetStore.stash_name)
     {:ok, store_pid } = TweetStore.start
     on_exit fn ->
-      if TweetStore.alive? do
-        TweetStore.clear
-        TweetStore.stop
-      end
+      Redis.clear_keys("test-*")
+      TweetStore.stop
       Stash.stop(TweetStore.stash_name)
     end
     {:ok, [monitor: Process.monitor(store_pid)]}

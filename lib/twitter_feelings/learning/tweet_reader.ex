@@ -11,7 +11,7 @@ defmodule TwitterFeelings.Learning.TweetReader do
 
   # private
 
-  defp read_tweets("0", lang, mood), do: nil
+  defp read_tweets("0", _, _), do: nil
 
   defp read_tweets(cursor, lang, mood) do
     {:ok, [next, tweets]} = Redis.run(["SSCAN", Redis.corpus_key(lang, mood), cursor, "COUNT", @page_size])
