@@ -24,7 +24,7 @@ defmodule TwitterFeelings.Learning.LearnerTest do
   end
 
   test "it counts tweet tokens for mood" do
-    assert_redis_count(lang, :negative, "how", 2)
+    assert_redis_count(lang, :negative, "how", 1)
     assert_redis_count(lang, :negative, "sad", 1)
     assert_redis_count(lang, :negative, ":(", 1)
     assert_redis_count(lang, :negative, "this", 1)
@@ -39,7 +39,6 @@ defmodule TwitterFeelings.Learning.LearnerTest do
     assert_redis_count(lang, :positive, ":D", 1)
   end
 
-
   test "it counts tweet tokens globally" do
     assert_redis_count(lang, "this", 2)
     assert_redis_count(lang, "tweet", 3)
@@ -53,12 +52,6 @@ defmodule TwitterFeelings.Learning.LearnerTest do
     assert_positive_probability(lang, "awesome", 1.0)
     assert_positive_probability(lang, "sad", 0.0)
     assert_positive_probability(lang, "tweet", 2/3)
-  end
-
-  test "it count tweets per mood" do
-    assert_redis_tweet_count(lang, :positive, 2)
-    assert_redis_tweet_count(lang, :negative, 3)
-    assert_positive_probability(lang, 2/5)
   end
 
   ########
@@ -81,20 +74,8 @@ defmodule TwitterFeelings.Learning.LearnerTest do
     assert ^count = expected
   end
 
-  def assert_redis_tweet_count(lang, mood, expected) do
-    count = redis_get(Redis.tweet_count_key(lang, mood), :integer)
-    assert ^count = expected
-  end
-
   def assert_positive_probability(lang, token, expected) do
     prob = redis_get(Redis.positive_prob_key(lang, token), :float)
-    rounded_prob = Float.round(prob, 5)
-    rounded_expected = Float.round(expected, 5)
-    assert ^rounded_prob = rounded_expected
-  end
-
-    def assert_positive_probability(lang, expected) do
-    prob = redis_get(Redis.positive_prob_key(lang), :float)
     rounded_prob = Float.round(prob, 5)
     rounded_expected = Float.round(expected, 5)
     assert ^rounded_prob = rounded_expected
@@ -125,8 +106,7 @@ defmodule TwitterFeelings.Learning.LearnerTest do
   def tweets(:negative) do
     [
       "how tweet sad :(",
-      "this quite terrific :((",
-      "how come :'("
+      "this quite terrific :(("
     ]
   end
 

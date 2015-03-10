@@ -15,10 +15,6 @@ defmodule TwitterFeelings.Learning.TokenCounter do
     GenServer.call(__MODULE__, {:update_count, tweet, lang, mood})
   end
 
-  def update_tweet_prob_for_mood(lang) do
-    GenServer.call(__MODULE__, {:update_tweet_prob_for_mood, lang})
-  end
-
   def initial_state do
     Redis.load_script(update_counters_script)
   end
@@ -36,20 +32,8 @@ defmodule TwitterFeelings.Learning.TokenCounter do
 
   def handle_call({:update_count, tweet, lang, mood}, _from, update_counters_sha) do
     import Redis
-    run(["INCRBY", tweet_count_key(lang, mood), 1])
     String.split(tweet)
       |> Enum.each(&update_count_per_token(&1, lang, mood, update_counters_sha))
-    {:reply, :ok, update_counters_sha}
-  end
-
-  def handle_call({:update_tweet_prob_for_mood, lang}, _from, update_counters_sha) do
-    import Redis
-    run(["EVAL",
-      """
-      local positive_tweets_count = redis.call("GET", KEYS[1])
-      local negative_tweets_count = redis.call("GET", KEYS[2])
-      redis.call("SET", KEYS[3], positive_tweets_count / (positive_tweets_count + negative_tweets_count))
-      """ , 3, tweet_count_key(lang, :positive), tweet_count_key(lang, :negative), positive_prob_key(lang)])
     {:reply, :ok, update_counters_sha}
   end
 

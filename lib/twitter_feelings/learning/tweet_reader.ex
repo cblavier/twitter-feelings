@@ -9,6 +9,12 @@ defmodule TwitterFeelings.Learning.TweetReader do
       |> Stream.flat_map(&(&1))
   end
 
+  def count(lang, mood) do
+    {:ok, count} = Redis.run(["SCARD", Redis.corpus_key(lang, mood)])
+    {count_i, _} = Integer.parse(count)
+    count_i
+  end
+
   # private
 
   defp read_tweets("0", _, _), do: nil
