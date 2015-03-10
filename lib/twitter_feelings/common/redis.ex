@@ -16,7 +16,9 @@ defmodule TwitterFeelings.Common.Redis do
   def corpus_key(lang, mood),         do: env_prefix("tf-corpus-#{lang}-#{mood}")
   def count_key(lang, mood, token),   do: env_prefix("tf-count-#{lang}-#{mood}-#{token}")
   def count_key(lang, token),         do: env_prefix("tf-count-#{lang}-all-#{token}")
+  def tweet_count_key(lang, mood),    do: env_prefix("tf-count-#{lang}-#{mood}")
   def positive_prob_key(lang, token), do: env_prefix("tf-positive-prob-#{lang}-#{token}")
+  def positive_prob_key(lang),        do: env_prefix("tf-positive-prob-#{lang}")
 
   # private
 

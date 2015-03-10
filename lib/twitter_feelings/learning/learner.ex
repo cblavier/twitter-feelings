@@ -12,12 +12,13 @@ defmodule TwitterFeelings.Learning.Learner do
     for mood <- [:negative, :positive] do
       Logger.debug "Learning from #{mood} #{lang} tweets"
       TweetReader.stream(lang, mood)
-        |> Stream.flat_map(&String.split/1)
-        |> Stream.map(fn (token) ->
-             Task.async(fn -> TokenCounter.update_count(token, lang, mood) end)
+        |> Stream.map(fn (tweet) ->
+             Task.async(fn -> TokenCounter.update_count(tweet, lang, mood) end)
            end)
         |> Enum.map(&Task.await/1)
     end
+
+    TokenCounter.update_tweet_prob_for_mood(lang)
   end
 
 end
